@@ -1,4 +1,4 @@
-%packages
+%packages --excludedocs
 
 #Remove Fedora trademarks
 -fedora-logos
