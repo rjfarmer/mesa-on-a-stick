@@ -4,4 +4,4 @@
 
 FILE=${1:-"MESA.iso"}
 
-qemu-system-x86_64 -m 2048 -vga qxl -cdrom $FILE
+qemu-kvm -m 4096 -vga qxl -cdrom $FILE
