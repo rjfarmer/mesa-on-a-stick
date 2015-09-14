@@ -10,13 +10,13 @@
 # workstation-product-environment in comps
 @base-x
 @core
-@fonts
-@guest-desktop-agents
+-@fonts
+-@guest-desktop-agents
 @hardware-support
-@libreoffice
-@multimedia
+-@libreoffice
+-@multimedia
 @networkmanager-submodules
-@printing
+-@printing
 @workstation-product
 
 # Branding for the installer

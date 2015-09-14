@@ -22,16 +22,16 @@ bootloader --timeout=1
 
 %packages
 @base-x
-@guest-desktop-agents
+-@guest-desktop-agents
 @standard
 @core
 @fedora-release-nonproduct
-@fonts
+-@fonts
 @input-methods
-@dial-up
+-@dial-up
 @multimedia
 @hardware-support
-@printing
+-@printing
 
 # Explicitly specified here:
 # <notting> walters: because otherwise dependency loops cause yum issues.
@@ -43,8 +43,8 @@ kernel
 memtest86+
 
 # The point of a live image is to install
-anaconda
-@anaconda-tools
+-anaconda
+-@anaconda-tools
 
 # Need aajohan-comfortaa-fonts for the SVG rnotes images
 aajohan-comfortaa-fonts

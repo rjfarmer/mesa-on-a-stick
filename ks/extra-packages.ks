@@ -31,7 +31,7 @@ python3-matplotlib
 -rhythmbox
 -hunspell*
 -@printing
--hunspell
+-hunspell*
 -iscsi*
 -sane*
 -abrt*
@@ -43,5 +43,7 @@ python3-matplotlib
 -@dial-up
 -@multimedia
 -@printing
--@libreoffice
+-@libreOffice
+-@LibreOffice
+-anaconda*
 %end
