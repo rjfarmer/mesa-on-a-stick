@@ -16,6 +16,7 @@ firewall --enabled --service=mdns
 xconfig --startxonboot
 part / --size 3072 --fstype ext4
 services --enabled=NetworkManager --disabled=network,sshd
+bootloader --timeout=1
 
 %include fedora-repo.ks
 
