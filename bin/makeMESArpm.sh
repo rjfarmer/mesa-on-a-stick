@@ -4,12 +4,17 @@
 
 VERSION=${1:-7624}
 
-rm -rf RPMBUILD
-mkdir -p RPMBUILD/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+BUILD_DIR="$(pwd)"
+
+
+rm -rf "$BUILD_DIR"/RPMBUILD
+mkdir -p "$BUILD_DIR"/RPMBUILD/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+ln -sf "$BUILD_DIR"/RPMBUILD $HOME/rpmbuild
 
 export BUILDROOT="/home/rob/mesa-on-a-stick/RPMBUILD/"
-cp  mesa-r$VERSION.zip RPMBUILD/SOURCES/mesa-r$VERSION.zip
-cp  mesasdk.tar.gz RPMBUILD/SOURCES/mesasdk.tar.gz
+
+ln -s  "$BUILD_DIR"/mesa-r$VERSION.zip "$BUILD_DIR"/RPMBUILD/SOURCES/mesa-r$VERSION.zip
+ln -s  "$BUILD_DIR"/mesasdk.tar.gz "$BUILD_DIR"/RPMBUILD/SOURCES/mesasdk.tar.gz
 
 
-rpmbuild --buildroot="/home/rob/mesa-on-a-stick/RPMBUILD/" --define="in_version $VERSION" -ba specs/mesa.spec
+rpmbuild --buildroot="$BUILD_DIR"/RPMBUILD --define="in_version $VERSION" -ba specs/mesa.spec
