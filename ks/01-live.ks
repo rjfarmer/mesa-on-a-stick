@@ -2,9 +2,6 @@
 # http://fedoraproject.org/wiki/Workstation
 # mailto:desktop@lists.fedoraproject.org
 
-%include fedora-live-base.ks
-%include fedora-workstation-packages.ks
-
 part / --size 6144 
 
 %post
@@ -27,27 +24,12 @@ touch ~liveuser/.config/gnome-initial-setup-done
 
 # make the installer show up
 if [ -f /usr/share/applications/liveinst.desktop ]; then
-  # Show harddisk install in shell dash
-#  sed -i -e 's/NoDisplay=true/NoDisplay=false/' /usr/share/applications/liveinst.desktop ""
-  # need to move it to anaconda.desktop to make shell happy
-#  mv /usr/share/applications/liveinst.desktop /usr/share/applications/anaconda.desktop
 
   cat >> /usr/share/glib-2.0/schemas/org.gnome.shell.gschema.override << FOE
 [org.gnome.shell]
 favorite-apps=['firefox.desktop', 'org.gnome.Nautilus.desktop']
 FOE
 
-  # Make the welcome screen show up
-  #if [ -f /usr/share/anaconda/gnome/fedora-welcome.desktop ]; then
-  #  mkdir -p ~liveuser/.config/autostart
-  #  cp /usr/share/anaconda/gnome/fedora-welcome.desktop /usr/share/applications/
-  #  cp /usr/share/anaconda/gnome/fedora-welcome.desktop ~liveuser/.config/autostart/
-  #fi
-
-  # Copy Anaconda branding in place
-  #if [ -d /usr/share/lorax/product/usr/share/anaconda ]; then
-  #  cp -a /usr/share/lorax/product/* /
-  #fi
 fi
 
 # rebuild schema cache with any overrides we installed

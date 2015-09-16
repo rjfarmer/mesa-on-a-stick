@@ -1,5 +1,4 @@
-%include ks/fedora-live-workstation.ks
-%include ks/fedora-live-minimization.ks
-%include ks/extra-packages.ks
-%include ks/extra-options.ks
-#%include ks/grub.ks
+%include ks/01-base.ks
+%include ks/01-live.ks
+%include ks/01-packages.ks
+%include ks/fedora-repo.ks
