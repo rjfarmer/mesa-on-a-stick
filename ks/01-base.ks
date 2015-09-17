@@ -14,9 +14,9 @@ auth --useshadow --enablemd5
 selinux --enforcing
 firewall --enabled --service=mdns
 xconfig --startxonboot
-part / --size 4096 --fstype ext4
+part / --size 10096 --fstype ext4
 services --enabled=NetworkManager --disabled=network,sshd
-bootloader --timeout=1
+bootloader --timeout=0
 
 %post
 # FIXME: it'd be better to get this installed from a package

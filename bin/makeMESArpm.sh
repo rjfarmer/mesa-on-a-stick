@@ -20,4 +20,9 @@ then
    ln -s  "$BUILD_DIR"/mesasdk.tar.gz "$BUILD_DIR"/RPMBUILD/SOURCES/mesasdk.tar.gz
 fi
 
-rpmbuild --define="in_version $VERSION" -ba specs/mesa.spec
+rpmbuild --define="in_version $VERSION" -ba specs/mesa.spec 2>&1 | tee rpm.log
+
+rm -rf mesa-repo
+mkdir mesa-repo
+ln -s $BUILD_DIR/RPMBUILD/RPMS/x86_64/mesa-$VERSION-*.rpm mesa-repo/
+createrepo mesa-repo

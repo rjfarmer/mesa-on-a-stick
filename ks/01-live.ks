@@ -2,7 +2,7 @@
 # http://fedoraproject.org/wiki/Workstation
 # mailto:desktop@lists.fedoraproject.org
 
-part / --size 6144 
+#part / --size 6144 
 
 %post
 
@@ -50,6 +50,18 @@ fi
 # make sure to set the right permissions and selinux contexts
 chown -R liveuser:liveuser /home/liveuser/
 restorecon -R /home/liveuser/
+
+
+#Set up mesa paths
+touch /home/liveuser/.bash_profile
+cat >> /home/liveuser/.bash_profile << FOE
+
+export MESASDK_ROOT=/opt/mesa/mesasdk
+source $MESASDK_ROOT/bin/mesasdk_init.sh
+export MESA_DIR=/opt/mesa/mesa-r7624
+
+FOE
+
 
 EOF
 

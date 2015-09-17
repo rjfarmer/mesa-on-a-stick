@@ -53,6 +53,7 @@ aajohan-comfortaa-fonts
 @workstation-product
 
 #MESA dependicies
+mesa-7624
 binutils
 make
 perl

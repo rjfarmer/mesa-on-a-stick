@@ -15,7 +15,7 @@ Source1:        mesa-r%{in_version}.zip
 
 
 BuildRequires:  binutils make perl libX11 libX11-devel zlib zlib-devel bzip2
-Requires:       perl make
+AutoReqProv: no
 
 %description
 MESA
@@ -31,9 +31,31 @@ export MESASDK_ROOT=%{_builddir}/mesasdk
 source $MESASDK_ROOT/bin/mesasdk_init.sh
 #As we extract mesa after the sdk we are allready in the mesa dir
 ./mk
-rm -rf **/*.tar.gz **/*.tar.bz2 **/*.rb **/*/final_* */make/*.o **/*.rb **/*.png 
-rm -rf data/*/cache/* **/star_history **/star_profile svnup 
-rm -rf **/test
+find . -name *.tar.gz -delete 2>/dev/null
+find . -name *.tar.bz2 -delete 2>/dev/null
+find . -name *.tar.zip -delete 2>/dev/null
+rm -rf star/test_suite/*/final_*  2>/dev/null
+find . -name *.o -delete 2>/dev/null
+find */make -name *.mod -delete 2>/dev/null
+rm -rf eos/data/* 2>/dev/null 
+#find . -name star_history -type d -delete 2>/dev/null
+#find . -name star_profile -type d -delete 2>/dev/null
+#find . -name plotters -type d -delete 2>/dev/null
+#find . -name *plot_data -type d -delete 2>/dev/null
+rm -f svnup clean mk install 2>/dev/null
+#find . -name test -type d -delete 2>/dev/null
+
+#Remove the data files leaviing just the cache filesm except for the
+# rates folder which we leave the data files.
+rm -rf data/eosDT_data/*.data 2>/dev/null
+rm data/eosDT_data/helm_table.dat
+rm -rf data/eosDE_data/*.data 2>/dev/null
+rm -rf data/eosPT_data/*.data 2>/dev/null
+rm -rf data/ionization_data/*.data 2>/dev/null
+rm -rf data/rates/cache/* 2>/dev/null
+rm -rf data/kap_data/*.data 2>/dev/null
+rm -rf */preprocessor
+
 
 %install
 rm -rf $RPM_BUILD_ROOT/opt

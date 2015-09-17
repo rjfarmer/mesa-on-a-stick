@@ -1,6 +1,8 @@
 *~
 *.iso
-build.log
+*.log
 *.zip
 *.tar.gz
 RPMBUILD/*
+mesa-repo
+cache
