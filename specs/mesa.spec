@@ -1,3 +1,8 @@
+#No debug info
+%define debug_package %{nil}
+#Dont strip static archives
+%define %{__strip} %{nil}
+
 Name:           mesa
 Version:        %{in_version}
 Release:        1%{?dist}
@@ -26,18 +31,20 @@ export MESASDK_ROOT=%{_builddir}/mesasdk
 source $MESASDK_ROOT/bin/mesasdk_init.sh
 #As we extract mesa after the sdk we are allready in the mesa dir
 ./mk
-rm -rf *.tar.gz *.tar.bz2 *.rb */final_* data/*/cache/* */make/*.o *.pdf *.tex *.png
+rm -rf **/*.tar.gz **/*.tar.bz2 **/*.rb **/*/final_* */make/*.o **/*.rb **/*.png 
+rm -rf data/*/cache/* **/star_history **/star_profile svnup 
+rm -rf **/test
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf $RPM_BUILD_ROOT/opt
 mkdir -p $RPM_BUILD_ROOT/opt/mesa
-cp -rp  %{_builddir}/mesasdk $RPM_BUILD_ROOT/opt/mesa/mesasdk
-cp -rp  %{_builddir}/mesa-r7624 $RPM_BUILD_ROOT/opt/mesa/mesa-r7624
+cp -rvp  %{_builddir}/mesasdk $RPM_BUILD_ROOT/opt/mesa/mesasdk
+cp -rvp  %{_builddir}/mesa-r7624 $RPM_BUILD_ROOT/opt/mesa/mesa-r7624
 
 
 
 %files
-$RPM_BUILD_ROOT/opt/mesa/*
+/opt/mesa/*
 
 %doc
 
