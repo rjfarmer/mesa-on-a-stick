@@ -36,14 +36,15 @@ find . -name *.tar.bz2 -delete 2>/dev/null
 find . -name *.tar.zip -delete 2>/dev/null
 rm -rf star/test_suite/*/final_*  2>/dev/null
 find . -name *.o -delete 2>/dev/null
+find . -name *.rb -delete 2>/dev/null
 find */make -name *.mod -delete 2>/dev/null
 rm -rf eos/data/* 2>/dev/null 
-#find . -name star_history -type d -delete 2>/dev/null
-#find . -name star_profile -type d -delete 2>/dev/null
-#find . -name plotters -type d -delete 2>/dev/null
-#find . -name *plot_data -type d -delete 2>/dev/null
+find star -name star_history/*  -delete 2>/dev/null
+find star -name star_profile/* -delete 2>/dev/null
+find star -name plotters/* -delete 2>/dev/null
+find star -name plot_data/* -type d -delete 2>/dev/null
 rm -f svnup clean mk install 2>/dev/null
-#find . -name test -type d -delete 2>/dev/null
+find */test/* -delete 2>/dev/null
 
 #Remove the data files leaviing just the cache filesm except for the
 # rates folder which we leave the data files.
@@ -52,10 +53,12 @@ rm data/eosDT_data/helm_table.dat
 rm -rf data/eosDE_data/*.data 2>/dev/null
 rm -rf data/eosPT_data/*.data 2>/dev/null
 rm -rf data/ionization_data/*.data 2>/dev/null
-rm -rf data/rates/cache/* 2>/dev/null
+rm -rf data/rates_data/cache/* 2>/dev/null
 rm -rf data/kap_data/*.data 2>/dev/null
 rm -rf */preprocessor
-
+rm -rf eos/eos*_builder 2>/dev/null
+rm -rf website xeon_phi_sample 2>/dev/null
+rm data/rates_data/jina_reaclib_results05301331
 
 %install
 rm -rf $RPM_BUILD_ROOT/opt
@@ -65,7 +68,8 @@ cp -rvp  %{_builddir}/mesa-r7624 $RPM_BUILD_ROOT/opt/mesa/mesa-r7624
 
 
 
-%files
+%files  
+%defattr(-,liveuser,liveuser,-)
 /opt/mesa/*
 
 %doc
