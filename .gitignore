@@ -6,3 +6,5 @@
 RPMBUILD/*
 mesa-repo
 cache
+tmp/*
+*/.fuse*

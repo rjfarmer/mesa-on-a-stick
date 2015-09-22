@@ -24,12 +24,17 @@
 -sane-backends
 -anaconda*
 -libvirt*
+-qemu*
 -devassistant*
 -libreoffice*
 -rhythmbox*
 -shotwell
 -evolution*
 -abrt*
+-cheese
+-totem*
+-gnome-boxes*
+-transmission-gtk
 
 
 # Explicitly specified here:
@@ -50,21 +55,22 @@ aajohan-comfortaa-fonts
 @core
 @hardware-support
 @networkmanager-submodules
-@workstation-product
+@workstation-product --nodefaults
+
 
 #MESA dependicies
 mesa-7624
-binutils
-make
-perl
-libX11
-zlib
+#binutils
+#make
+#perl
+#libX11
+#zlib
 
 #Other packages
 python3-ipython
 python3-numpy
 python3-scipy
 python3-matplotlib
-
+nano
 
 %end

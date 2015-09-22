@@ -2,4 +2,6 @@
 
 #Creates a new live image, must run as root
 
-livecd-creator --verbose --config=main.ks --fslabel=MESA --cache=cache/live 2>&1 | tee build.log
+rm -rf cache/live/mesa-repo
+
+livecd-creator --verbose --config=main.ks --fslabel=MESA --cache=cache/live -t tmp/ 2>&1 | tee build.log
