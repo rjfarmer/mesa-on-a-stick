@@ -59,12 +59,10 @@ aajohan-comfortaa-fonts
 
 
 #MESA dependicies
+mesa-data
+mesa-examples
 mesa-7624
-#binutils
-#make
-#perl
-#libX11
-#zlib
+
 
 #Other packages
 python3-ipython

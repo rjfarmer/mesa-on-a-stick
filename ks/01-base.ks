@@ -16,7 +16,7 @@ firewall --enabled --service=mdns
 xconfig --startxonboot
 part / --size 10096 --fstype ext4
 services --enabled=NetworkManager --disabled=network,sshd
-bootloader --append="GRUB_TIMEOUT=0 GRUB_HIDDEN_TIMEOUT=0"
+bootloader --timeout=0
 
 %post
 # FIXME: it'd be better to get this installed from a package

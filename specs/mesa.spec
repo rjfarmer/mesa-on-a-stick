@@ -1,15 +1,13 @@
 #No debug info
-%global _enable_debug_package 0
-%global debug_package %{nil}
-%global __os_install_post /usr/lib/rpm/brp-compress %{nil}
-#Dont strip static archives
+#%global _enable_debug_package 0
+#%global debug_package %{nil}
 
 Name:           mesa
 Version:        %{in_version}
 Release:        1%{?dist}
-Summary:        MESA
+Summary:        1-D stellar evolution code
 
-License:        GPLv2 or later
+License:        GPLv2+ and non-commercial 
 URL:            http://mesa.sourceforge.net/
 Source0:        mesasdk.tar.gz
 Source1:        mesa-custom.zip
@@ -18,13 +16,29 @@ Source2:        mesa-r%{in_version}.zip
 
 
 BuildRequires:  binutils make perl libX11 libX11-devel zlib zlib-devel bzip2 zip
+Requires:    mesa-data mesa-examples
 AutoReqProv: no
 
 %description
-MESA
+MESA (Modules for Expirments in Stellar Astrophysics) is a 1-D
+stellar evolution code.
 
+%package data
+Summary:       Data files needed for mesa
+AutoReqProv: no
+
+%description data
+MESA data
+
+%package examples
+Summary:       Test suite examples for mesa
+AutoReqProv: no
+
+%description examples
+MESA examples
 
 %prep
+#http://www.rpm.org/max-rpm/s1-rpm-inside-macros.html
 %setup -n mesasdk
 %setup -T -b 1 -n mesa-custom
 %setup -T -b 2 -n mesa-r%{in_version}
@@ -64,7 +78,7 @@ cd $MESA_DIR
 cd star/test_suite
 rm -rf */final_* 2>/dev/null
 rm -rf */*.rb 2>/dev/null
-rm -rf */LOGS */make */src */star_* 2>/dev/null
+rm -rf */LOGS* */photos* */make */src */star_*  2>/dev/null
 rm -rf */{ck,mk,clean} 2>/dev/null
 rm -rf */docs */plotters 2>/dev/null
 rm -rf */*plot_data* 2>/dev/null
@@ -94,25 +108,40 @@ cd $MESA_DIR
 %install
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datarootdir}/mesa
-
-cp -vp star/star %{buildroot}%{_bindir}/mesa-star
-cp -vp binary/binary %{buildroot}%{_bindir}/mesa-binary
-cp -vrp data %{buildroot}%{_datarootdir}/mesa/data
-cp -rvp star/defaults %{buildroot}%{_datarootdir}/mesa/star-defaults
-cp -rvp binary/defaults %{buildroot}%{_datarootdir}/mesa/binary-defaults
-cp -rvp star/work %{buildroot}%{_datarootdir}/mesa/star-work
-cp -rvp binary/work %{buildroot}%{_datarootdir}/mesa/binary-work
-
-cp -rvp star/test_suite %{buildroot}%{_datarootdir}/mesa/star-test-suite
-cp -rvp binary/test_suite %{buildroot}%{_datarootdir}/mesa/binary-test-suite
-
-mkdir -p %{buildroot}%{_libdir}/mesa
-cp -rvp ../mesasdk/lib64/*.so* %{buildroot}%{_libdir}/mesa/
-cp -rvp ../mesasdk/lib/*.so* %{buildroot}%{_libdir}/mesa/
-cp -rvp --remove-destination ../mesasdk/pgplot %{buildroot}%{_libdir}/mesa/pgplot
-
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
+mkdir -p %{buildroot}%{_libdir}/mesa
+
+#Compiled exectuables
+cp -v star/star %{buildroot}%{_bindir}/mesa-star
+cp -v binary/binary %{buildroot}%{_bindir}/mesa-binary
+
+#Data direcotry with cache files in
+cp -vr data %{buildroot}%{_datarootdir}/mesa/data
+
+#Default files
+cp -rv star/defaults %{buildroot}%{_datarootdir}/mesa/star-defaults
+cp -rv binary/defaults %{buildroot}%{_datarootdir}/mesa/binary-defaults
+
+#Default wokr directories
+cp -rv star/work %{buildroot}%{_datarootdir}/mesa/star-work
+cp -rv binary/work %{buildroot}%{_datarootdir}/mesa/binary-work
+
+#Grab the test suite
+cp -rv star/test_suite %{buildroot}%{_datarootdir}/mesa/star-test-suite
+cp -rv binary/test_suite %{buildroot}%{_datarootdir}/mesa/binary-test-suite
+
+#Adds script to /etc/profile.d which adds the enviroment varaibles we need
 cp ../mesa-custom/mesa-custom.sh %{buildroot}%{_sysconfdir}/profile.d/mesa-custom.sh
+
+#Adds needed libraries from the sdk
+cp -rv ../mesasdk/lib64/*.so* %{buildroot}%{_libdir}/mesa/
+cp -rv ../mesasdk/lib/*.so* %{buildroot}%{_libdir}/mesa/
+cp -rv --remove-destination ../mesasdk/pgplot %{buildroot}%{_libdir}/mesa/pgplot
+
+#Fix pgplot link
+cd %{buildroot}%{_libdir}/mesa/
+ln -sf pgplot/libpgplot.so libpgplot.so 
+cd -
 
 
 
@@ -124,9 +153,22 @@ cp ../mesa-custom/mesa-custom.sh %{buildroot}%{_sysconfdir}/profile.d/mesa-custo
 %defattr(-,root,root,-)
 %{_bindir}/mesa-star
 %{_bindir}/mesa-binary
-%{_datarootdir}/mesa/*
-%{_libdir}/mesa/*
+%{_datarootdir}/mesa/star-work
+%{_datarootdir}/mesa/binary-work
+%{_datarootdir}/mesa/star-defaults
+%{_datarootdir}/mesa/binary-defaults
 %{_sysconfdir}/profile.d/mesa-custom.sh
+%{_libdir}/mesa/*
+
+%files data
+%defattr(-,root,root,-)
+%{_datarootdir}/mesa/data/*
+
+%files examples
+%defattr(-,root,root,-)
+%{_datarootdir}/mesa/star-test-suite/*
+%{_datarootdir}/mesa/binary-test-suite/*
+
 
 %doc
 

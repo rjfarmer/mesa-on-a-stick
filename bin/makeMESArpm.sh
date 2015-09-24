@@ -21,18 +21,18 @@ then
    
    zip "$BUILD_DIR"/patches/mesa-custom.zip "$BUILD_DIR"/patches/mesa-custom/*
    cp "$BUILD_DIR"/patches/mesa-custom.zip "$BUILD_DIR"/RPMBUILD/SOURCES/mesa-custom.zip
-   
+  
+   rm -rf mesa-repo
+   mkdir mesa-repo
 fi
 
-rpmbuild --define="topdir $BUILD_DIR/RPMBUILD" --define="in_version $VERSION" -ba specs/mesa.spec 2>&1 | tee rpm.log
+rpmbuild --define="_topdir $BUILD_DIR/RPMBUILD/" --define="in_version $VERSION" -ba specs/mesa.spec 2>&1 | tee rpm.log
 
-rpmlint specs/mesa.spec $BUILD_DIR/SRPMS/* $BUILD_DIR/RPMS/x86_64/* | tee rpmlint.log 
+rpmlint specs/mesa.spec $BUILD_DIR/RPMBUILD/SRPMS/* $BUILD_DIR/RPMBUILD/RPMS/x86_64/* | tee rpmlint.log 
 
 if [[ $? -eq 0 && -e $BUILD_DIR/RPMBUILD/RPMS/x86_64/mesa-"$VERSION"-1.fc22.x86_64.rpm ]] 
 then
-   rm -rf mesa-repo
-   mkdir mesa-repo
-   cp $BUILD_DIR/RPMBUILD/RPMS/x86_64/mesa-$VERSION-*.rpm mesa-repo/.
+   cp $BUILD_DIR/RPMBUILD/RPMS/x86_64/mesa*.rpm mesa-repo/.
    rm -rf $BUILD_DIR/RPMBUILD
    createrepo mesa-repo
 fi
