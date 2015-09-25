@@ -1,6 +1,4 @@
-#No debug info
-#%global _enable_debug_package 0
-#%global debug_package %{nil}
+%define debug_package %{nil}
 
 Name:           mesa
 Version:        %{in_version}
@@ -15,7 +13,7 @@ Source2:        mesa-r%{in_version}.zip
 
 
 
-BuildRequires:  binutils make perl libX11 libX11-devel zlib zlib-devel bzip2 zip
+BuildRequires:  binutils make perl libX11 libX11-devel zlib zlib-devel bzip2 zip chrpath
 Requires:    mesa-data mesa-examples
 AutoReqProv: no
 
@@ -84,11 +82,32 @@ rm -rf */docs */plotters 2>/dev/null
 rm -rf */*plot_data* 2>/dev/null
 rm inlist_test_suite each_* do1_* 2>/dev/null
 
+
 sed -i '/read_extra_star_job_inlist1/d' */inlist*
 sed -i '/extra_star_job_inlist1_name/d' */inlist*
 
 #Add inlists from star/ into the test suites, only if they need. Also remove all the ../../ from their paths
-for file in "inlist_ccsn_edep_defaults" "inlist_ccsn_explosion_defaults" "inlist_ccsn_RTI_defaults" "inlist_massive_defaults"; do for dir in */; do grep -q $file $dir/inlist* && sed -i "s/\.\.\/\.\.\/$file/$file/g" $dir/inlist* && cp $MESA_DIR/star/$file $dir/$file;  done; done
+for file in "inlist_ccsn_edep_defaults" "inlist_ccsn_explosion_defaults" "inlist_ccsn_RTI_defaults" "inlist_massive_defaults" 
+do 
+   for dir in */
+   do 
+      grep -q "$file" "$dir/inlist*" && sed -i "s/\.\.\/\.\.\/$file/$file/g" "$dir/inlist*" && cp "$MESA_DIR/star/$file" "$dir/$file"
+   done
+done
+
+#Fix she-bangs on rn scripts
+for dir in */
+do 
+   for r in "$dir/rn*"
+   do 
+      if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
+      then 
+         echo '#!/bin/bash' | cat - "$r" > tmp && mv tmp "$r"
+      fi
+   done
+done
+
+
 
 cd $MESA_DIR
 
@@ -105,11 +124,13 @@ sed -i '/mesa_dir/d' */inlist*
 
 cd $MESA_DIR
 
+
 %install
 mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datarootdir}/mesa
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 mkdir -p %{buildroot}%{_libdir}/mesa
+mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
 
 #Compiled exectuables
 cp -v star/star %{buildroot}%{_bindir}/mesa-star
@@ -143,6 +164,15 @@ cd %{buildroot}%{_libdir}/mesa/
 ln -sf pgplot/libpgplot.so libpgplot.so 
 cd -
 
+#Make ld.so.conf.d/file
+cat > %{buildroot}%{_sysconfdir}/ld.so.conf.d/mesa-star-x86_64.conf << EOF
+%{_libdir}/mesa/
+%{_libdir}/mesa/pgplot
+EOF
+#Remove rpaths
+chrpath --delete %{buildroot}%{_bindir}/mesa-star
+chrpath --delete %{buildroot}%{_bindir}/mesa-binary
+
 
 
 %post -p /sbin/ldconfig
@@ -158,6 +188,7 @@ cd -
 %{_datarootdir}/mesa/star-defaults
 %{_datarootdir}/mesa/binary-defaults
 %{_sysconfdir}/profile.d/mesa-custom.sh
+%{_sysconfdir}/ld.so.conf.d/mesa-star-x86_64.conf
 %{_libdir}/mesa/*
 
 %files data

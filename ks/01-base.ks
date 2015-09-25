@@ -16,7 +16,7 @@ firewall --enabled --service=mdns
 xconfig --startxonboot
 part / --size 10096 --fstype ext4
 services --enabled=NetworkManager --disabled=network,sshd
-bootloader --timeout=0
+bootloader --timeout=1
 
 %post
 # FIXME: it'd be better to get this installed from a package
