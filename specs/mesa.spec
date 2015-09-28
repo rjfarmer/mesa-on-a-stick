@@ -63,13 +63,25 @@ cd $MESA_DIR
 
 #Remove the data files leaviing just the cache files except for the
 #rates folder where we leave the data files.
-rm -rf data/eosDT_data/*.data 2>/dev/null
-rm data/eosDT_data/helm_table.dat 2>/dev/null
-rm -rf data/eosDE_data/*.data 2>/dev/null
-rm -rf data/eosPT_data/*.data 2>/dev/null
-rm -rf data/ionization_data/*.data 2>/dev/null
-rm -rf data/rates_data/cache/* 2>/dev/null
-rm -rf data/kap_data/*.data 2>/dev/null
+# rm -rf data/eosDT_data/*.data 2>/dev/null
+# rm data/eosDT_data/helm_table.dat 2>/dev/null
+# rm -rf data/eosDE_data/*.data 2>/dev/null
+# rm -rf data/eosPT_data/*.data 2>/dev/null
+# rm -rf data/ionization_data/*.data 2>/dev/null
+# rm -rf data/rates_data/cache/* 2>/dev/null
+# rm -rf data/kap_data/*.data 2>/dev/null
+rm -rf data/*/cache/* 2>/dev/null
+rm -rf data/eosDT_data/macdonald-* 2>/dev/null
+rm -rf data/eosDT_data/mesa-no-rad-eosDT-* 2>/dev/null
+rm -rf data/eosPT_data/mesa-no-rad-eosDT-* 2>/dev/null
+rm -rf data/kap_data/gs98* 2>/dev/null
+rm -rf data/kap_data/a09* 2>/dev/null
+rm -rf data/kap_data/OP* 2>/dev/null
+rm -rf data/kap_data/lowT_Freedman11* 2>/dev/null
+rm -rf data/kap_data/lowT_fa05_gn93* 2>/dev/null
+rm -rf data/kap_data/lowT_fa05a09p* 2>/dev/null
+rm -rf data/kap_data/lowT_af94_gn93* 2>/dev/null
+
 cd $MESA_DIR
 
 # De-test-suite-ify the test suite
@@ -91,14 +103,17 @@ for file in "inlist_ccsn_edep_defaults" "inlist_ccsn_explosion_defaults" "inlist
 do 
    for dir in */
    do 
-      grep -q "$file" "$dir/inlist*" && sed -i "s/\.\.\/\.\.\/$file/$file/g" "$dir/inlist*" && cp "$MESA_DIR/star/$file" "$dir/$file"
+      for i in "$dir/inlist*"
+      do
+         grep -q "$file" "$dir/inlist*" && sed -i "s/\.\.\/\.\.\/$file/$file/g" "$i" && cp "$MESA_DIR/star/$file" "$dir/$file"
+      done
    done
 done
 
 #Fix she-bangs on rn scripts
 for dir in */
 do 
-   for r in "$dir/rn*"
+   for r in "$dir/rn" "$dir/rn*"
    do 
       if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
       then 
@@ -106,7 +121,6 @@ do
       fi
    done
 done
-
 
 
 cd $MESA_DIR
@@ -122,6 +136,19 @@ rm -rf clean_each_binary_test do1_binary_test_source each_binary_test_run report
 
 sed -i '/mesa_dir/d' */inlist*
 
+#Fix she-bangs on rn scripts
+for dir in */
+do 
+   for r in "$dir/rn" "$dir/rn*"
+   do 
+      if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
+      then 
+         echo '#!/bin/bash' | cat - "$r" > tmp && mv tmp "$r"
+      fi
+   done
+done
+
+
 cd $MESA_DIR
 
 
@@ -130,20 +157,22 @@ mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datarootdir}/mesa
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 mkdir -p %{buildroot}%{_libdir}/mesa
-mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
+# mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
 
 #Compiled exectuables
 cp -v star/star %{buildroot}%{_bindir}/mesa-star
 cp -v binary/binary %{buildroot}%{_bindir}/mesa-binary
 
-#Data direcotry with cache files in
-cp -vr data %{buildroot}%{_datarootdir}/mesa/data
+#Data directory with cache files in
+cp -vr data %{buildroot}%{_datarootdir}/mesa/
+
+
 
 #Default files
 cp -rv star/defaults %{buildroot}%{_datarootdir}/mesa/star-defaults
 cp -rv binary/defaults %{buildroot}%{_datarootdir}/mesa/binary-defaults
 
-#Default wokr directories
+#Default work directories
 cp -rv star/work %{buildroot}%{_datarootdir}/mesa/star-work
 cp -rv binary/work %{buildroot}%{_datarootdir}/mesa/binary-work
 
@@ -165,10 +194,10 @@ ln -sf pgplot/libpgplot.so libpgplot.so
 cd -
 
 #Make ld.so.conf.d/file
-cat > %{buildroot}%{_sysconfdir}/ld.so.conf.d/mesa-star-x86_64.conf << EOF
-%{_libdir}/mesa/
-%{_libdir}/mesa/pgplot
-EOF
+# cat > %{buildroot}%{_sysconfdir}/ld.so.conf.d/mesa-star-x86_64.conf << EOF
+# %{_libdir}/mesa/
+# %{_libdir}/mesa/pgplot
+# EOF
 #Remove rpaths
 chrpath --delete %{buildroot}%{_bindir}/mesa-star
 chrpath --delete %{buildroot}%{_bindir}/mesa-binary
@@ -180,7 +209,6 @@ chrpath --delete %{buildroot}%{_bindir}/mesa-binary
 
 
 %files 
-%defattr(-,root,root,-)
 %{_bindir}/mesa-star
 %{_bindir}/mesa-binary
 %{_datarootdir}/mesa/star-work
@@ -188,17 +216,15 @@ chrpath --delete %{buildroot}%{_bindir}/mesa-binary
 %{_datarootdir}/mesa/star-defaults
 %{_datarootdir}/mesa/binary-defaults
 %{_sysconfdir}/profile.d/mesa-custom.sh
-%{_sysconfdir}/ld.so.conf.d/mesa-star-x86_64.conf
+#%{_sysconfdir}/ld.so.conf.d/mesa-star-x86_64.conf
 %{_libdir}/mesa/*
 
 %files data
-%defattr(-,root,root,-)
 %{_datarootdir}/mesa/data/*
 
 %files examples
-%defattr(-,root,root,-)
-%{_datarootdir}/mesa/star-test-suite/*
-%{_datarootdir}/mesa/binary-test-suite/*
+%attr(0755, root, root) %{_datarootdir}/mesa/star-test-suite/*
+%attr(0755, root, root) %{_datarootdir}/mesa/binary-test-suite/*
 
 
 %doc
