@@ -1,0 +1,25 @@
+From 0c016ec69643fd2a9a4579d1834fc6708c277a54 Mon Sep 17 00:00:00 2001
+From: Robert Farmer <rjfarmer@asu.edu>
+Date: Mon, 28 Sep 2015 12:58:11 -0700
+Subject: [PATCH] Turn off cache files
+
+---
+ star/private/star_private_def.f90 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/star/private/star_private_def.f90 b/star/private/star_private_def.f90
+index 98b4500..8f8ca9d 100644
+--- a/star/private/star_private_def.f90
++++ b/star/private/star_private_def.f90
+@@ -376,7 +376,7 @@
+          logical, intent(in) :: use_special_weak_rates
+          integer, intent(out) :: ierr
+ 
+-         logical, parameter :: use_cache = .true.
++         logical, parameter :: use_cache = .false.
+          character (len=strlen) :: fname
+          integer :: iounit
+          
+-- 
+2.4.3
+

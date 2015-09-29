@@ -1,0 +1,5 @@
+#!/bin/bash
+
+FOLDOUT=${1:-mesa-star-work}
+
+cp -r /usr/share/mesa/binary-work $FOLDOUT

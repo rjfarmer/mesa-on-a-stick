@@ -17,8 +17,11 @@ then
    cp  "$BUILD_DIR"/mesasdk.tar.gz "$BUILD_DIR"/RPMBUILD/SOURCES/mesasdk.tar.gz
    
    cd patches
-   zip "$BUILD_DIR"/patches/mesa-custom.zip mesa-custom/*
-   cp "$BUILD_DIR"/patches/mesa-custom.zip "$BUILD_DIR"/RPMBUILD/SOURCES/mesa-custom.zip
+   zip "$BUILD_DIR"/patches/extras.zip extras/*
+   cp "$BUILD_DIR"/patches/extras.zip "$BUILD_DIR"/RPMBUILD/SOURCES/extras.zip
+   
+   cp *.patch "$BUILD_DIR"/RPMBUILD/SOURCES/.
+   
    cd -
   
    rm -rf mesa-repo

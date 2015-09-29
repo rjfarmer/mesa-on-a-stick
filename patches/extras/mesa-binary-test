@@ -1,0 +1,6 @@
+#!/bin/bash
+
+FOLDIN=$1
+FOLDOUT=${2:-$1}
+
+cp -r /usr/share/mesa/binary-test-suite/$FOLDIN $FOLDOUT

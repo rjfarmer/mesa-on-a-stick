@@ -20,12 +20,16 @@ FOE
 mkdir ~liveuser/.config
 touch ~liveuser/.config/gnome-initial-setup-done
 
+mkdir -p ~liveuser/Desktop
+ln -sf /usr/bin/firefox ~liveuser/Desktop/firefox
+ln -sf /usr/bin/gnome-terminal ~liveuser/Desktop/gnome-terminal
+
 # make the installer show up
 if [ -f /usr/share/applications/liveinst.desktop ]; then
 
   cat >> /usr/share/glib-2.0/schemas/org.gnome.shell.gschema.override << FOE
 [org.gnome.shell]
-favorite-apps=['firefox.desktop', 'org.gnome.Nautilus.desktop']
+favorite-apps=['firefox.desktop', 'org.gnome.Nautilus.desktop','org.gnome.Terminal.desktop']
 FOE
 
 fi
@@ -48,15 +52,6 @@ fi
 # make sure to set the right permissions and selinux contexts
 chown -R liveuser:liveuser /home/liveuser/
 restorecon -R /home/liveuser/
-
-
-#Set up mesa paths
-touch /home/liveuser/.bash_profile
-cat > /home/liveuser/.bash_profile << FOE
-
-export MESA_DIR=/opt/mesa/mesa-r7624
-
-FOE
 
 
 EOF

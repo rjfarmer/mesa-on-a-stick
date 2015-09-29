@@ -8,9 +8,11 @@ Summary:        1-D stellar evolution code
 License:        GPLv2+ and non-commercial 
 URL:            http://mesa.sourceforge.net/
 Source0:        mesasdk.tar.gz
-Source1:        mesa-custom.zip
+Source1:        extras.zip
 Source2:        mesa-r%{in_version}.zip
 
+#We dont want any cache files in the data directory
+Patch0:         0001-Turn-off-cache-files.patch
 
 
 BuildRequires:  binutils make perl libX11 libX11-devel zlib zlib-devel bzip2 zip chrpath
@@ -38,8 +40,10 @@ MESA examples
 %prep
 #http://www.rpm.org/max-rpm/s1-rpm-inside-macros.html
 %setup -n mesasdk
-%setup -T -b 1 -n mesa-custom
+%setup -T -b 1 -n extras
 %setup -T -b 2 -n mesa-r%{in_version}
+
+%patch0 -p1
 
 %build
 export MESASDK_ROOT=%{_builddir}/mesasdk
@@ -51,25 +55,42 @@ cd $MESA_DIR
 cd $MESA_DIR
 cd star/work
 ./mk
-rm -rf mk src make rn re clean LOGS photos 2>/dev/null
+rm -rf mk src make clean LOGS photos 2>/dev/null
+
+
+for r in "rn" "re"
+do 
+   if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
+   then 
+      echo '#!/bin/bash' | cat - "$r" > tmp && mv tmp "$r"
+   fi
+   sed -i s'/star\.exe/\/usr\/bin\/mesa\-star/g' $r
+   sed -i s'/\.\/star/\/usr\/bin\/mesa\-star/g' $r  
+done
+
+
 mv star ../.
 
 cd $MESA_DIR
 cd binary/work
 ./mk
-rm -rf mk src make rn re clean LOGS photos 2>/dev/null
+rm -rf mk src make clean LOGS photos 2>/dev/null
+
+for r in "rn" "rn*" "re"
+do 
+   if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
+   then 
+      echo '#!/bin/bash' | cat - "$r" > tmp && mv tmp "$r"
+   fi
+   sed -i s'/binary\.exe/\/usr\/bin\/mesa\-binary/g' $r
+   sed -i s'/\.\/binary/\/usr\/bin\/mesa\-binary/g' $r     
+done
+
+
 mv binary ../.
 cd $MESA_DIR
 
-#Remove the data files leaviing just the cache files except for the
-#rates folder where we leave the data files.
-# rm -rf data/eosDT_data/*.data 2>/dev/null
-# rm data/eosDT_data/helm_table.dat 2>/dev/null
-# rm -rf data/eosDE_data/*.data 2>/dev/null
-# rm -rf data/eosPT_data/*.data 2>/dev/null
-# rm -rf data/ionization_data/*.data 2>/dev/null
-# rm -rf data/rates_data/cache/* 2>/dev/null
-# rm -rf data/kap_data/*.data 2>/dev/null
+#Remove cache files and extra eos/kap tables we dont want
 rm -rf data/*/cache/* 2>/dev/null
 rm -rf data/eosDT_data/macdonald-* 2>/dev/null
 rm -rf data/eosDT_data/mesa-no-rad-eosDT-* 2>/dev/null
@@ -92,7 +113,7 @@ rm -rf */LOGS* */photos* */make */src */star_*  2>/dev/null
 rm -rf */{ck,mk,clean} 2>/dev/null
 rm -rf */docs */plotters 2>/dev/null
 rm -rf */*plot_data* 2>/dev/null
-rm inlist_test_suite each_* do1_* 2>/dev/null
+rm inlist_test_suite each_* do1_* test_suite_makefile_prefix mesa_dir.rb report debugging_stuff_for_inlists clean_each_test README build_and_run 2>/dev/null
 
 
 sed -i '/read_extra_star_job_inlist1/d' */inlist*
@@ -113,13 +134,24 @@ done
 #Fix she-bangs on rn scripts
 for dir in */
 do 
-   for r in "$dir/rn" "$dir/rn*"
+   for r in "$dir/rn*" "$dir/re"
    do 
       if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
       then 
          echo '#!/bin/bash' | cat - "$r" > tmp && mv tmp "$r"
       fi
+      sed -i s'/star\.exe/\/usr\/bin\/mesa\-star/g' $r
+      sed -i s'/\.\/star/\/usr\/bin\/mesa\-star/g' $r  
    done
+done
+
+#enable pgstar plots for all
+for dir in */
+do
+   if [[ -e  $dir/inlist ]]
+   then
+      sed -i 's/\!pgstar_flag/pgstar_flag/g' $dir/inlist* 2>/dev/null
+   fi
 done
 
 
@@ -128,7 +160,7 @@ cd $MESA_DIR
 cd binary/test_suite
 rm -rf */final_* 2>/dev/null
 rm -rf */*.rb 2>/dev/null
-rm -rf */LOGS{1,2} */make */src */star_* 2>/dev/null
+rm -rf */LOGS{1,2} */make */src */star_* */photos* 2>/dev/null
 rm -rf */{ck,mk,clean} 2>/dev/null
 rm -rf */docs */plotters 2>/dev/null
 rm -rf */*plot_data* 2>/dev/null
@@ -136,15 +168,26 @@ rm -rf clean_each_binary_test do1_binary_test_source each_binary_test_run report
 
 sed -i '/mesa_dir/d' */inlist*
 
+#enable pgstar plots for all
+for dir in */
+do
+   if [[ -e  $dir/inlist ]]
+   then
+      sed -i 's/\!pgstar_flag/pgstar_flag/g' $dir/inlist* 2>/dev/null
+   fi
+done
+
 #Fix she-bangs on rn scripts
 for dir in */
 do 
-   for r in "$dir/rn" "$dir/rn*"
+   for r in "$dir/rn*" "$dir/re"
    do 
       if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
       then 
          echo '#!/bin/bash' | cat - "$r" > tmp && mv tmp "$r"
       fi
+      sed -i s'/binary\.exe/\/usr\/bin\/mesa-binary/g' $r
+      sed -i s'/\.\/binary/\/usr\/bin\/mesa-binary/g' $r     
    done
 done
 
@@ -157,13 +200,12 @@ mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datarootdir}/mesa
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 mkdir -p %{buildroot}%{_libdir}/mesa
-# mkdir -p %{buildroot}%{_sysconfdir}/ld.so.conf.d
 
 #Compiled exectuables
 cp -v star/star %{buildroot}%{_bindir}/mesa-star
 cp -v binary/binary %{buildroot}%{_bindir}/mesa-binary
 
-#Data directory with cache files in
+#Data directory without cache files in
 cp -vr data %{buildroot}%{_datarootdir}/mesa/
 
 
@@ -175,13 +217,53 @@ cp -rv binary/defaults %{buildroot}%{_datarootdir}/mesa/binary-defaults
 #Default work directories
 cp -rv star/work %{buildroot}%{_datarootdir}/mesa/star-work
 cp -rv binary/work %{buildroot}%{_datarootdir}/mesa/binary-work
+#Copy in default history and profile column files
+cp -rv star/defaults/history_columns.list %{buildroot}%{_datarootdir}/mesa/star-work/.
+cp -rv star/defaults/profile_columns.list %{buildroot}%{_datarootdir}/mesa/star-work/.
+
+cp -rv star/defaults/history_columns.list %{buildroot}%{_datarootdir}/mesa/binary-work/.
+cp -rv star/defaults/profile_columns.list %{buildroot}%{_datarootdir}/mesa/binary-work/.
+cp -rv binary/defaults/binary_history_columns.list %{buildroot}%{_datarootdir}/mesa/binary-work/.
+
+#Copy the defaults folders
+cp -rv star/defaults %{buildroot}%{_datarootdir}/mesa/star-work/star-defaults
+cp -rv  star/defaults %{buildroot}%{_datarootdir}/mesa/binary-work/star-defaults
+cp -rv  binary/defaults %{buildroot}%{_datarootdir}/mesa/binary-work/binary-defaults
+
 
 #Grab the test suite
 cp -rv star/test_suite %{buildroot}%{_datarootdir}/mesa/star-test-suite
 cp -rv binary/test_suite %{buildroot}%{_datarootdir}/mesa/binary-test-suite
 
+pushd $(pwd)
+
+cd %{buildroot}%{_datarootdir}/mesa/star-test-suite
+for i in */
+do
+   cd $i
+   ln -sf %{_datarootdir}/mesa/star-defaults star-defaults
+   cd ../
+done
+
+cd ../../
+
+cd %{buildroot}%{_datarootdir}/mesa/binary-test-suite
+for i in */
+do
+   cd $i
+   ln -sf %{_datarootdir}/mesa/star-defaults star-defaults
+   ln -sf %{_datarootdir}/mesa/binary-defaults binary-defaults
+   cd ../
+done
+
+popd
+
 #Adds script to /etc/profile.d which adds the enviroment varaibles we need
-cp ../mesa-custom/mesa-custom.sh %{buildroot}%{_sysconfdir}/profile.d/mesa-custom.sh
+cp ../extras/mesa-custom.sh %{buildroot}%{_sysconfdir}/profile.d/mesa-custom.sh
+
+#extra shell scripts used
+cp ../extras/mesa-star* %{buildroot}%{_bindir}/.
+cp ../extras/mesa-binary* %{buildroot}%{_bindir}/.
 
 #Adds needed libraries from the sdk
 cp -rv ../mesasdk/lib64/*.so* %{buildroot}%{_libdir}/mesa/
@@ -193,15 +275,9 @@ cd %{buildroot}%{_libdir}/mesa/
 ln -sf pgplot/libpgplot.so libpgplot.so 
 cd -
 
-#Make ld.so.conf.d/file
-# cat > %{buildroot}%{_sysconfdir}/ld.so.conf.d/mesa-star-x86_64.conf << EOF
-# %{_libdir}/mesa/
-# %{_libdir}/mesa/pgplot
-# EOF
 #Remove rpaths
 chrpath --delete %{buildroot}%{_bindir}/mesa-star
 chrpath --delete %{buildroot}%{_bindir}/mesa-binary
-
 
 
 %post -p /sbin/ldconfig
@@ -209,23 +285,47 @@ chrpath --delete %{buildroot}%{_bindir}/mesa-binary
 
 
 %files 
-%{_bindir}/mesa-star
-%{_bindir}/mesa-binary
+%attr(0755, root, root) %{_bindir}/mesa-*
 %{_datarootdir}/mesa/star-work
 %{_datarootdir}/mesa/binary-work
 %{_datarootdir}/mesa/star-defaults
 %{_datarootdir}/mesa/binary-defaults
-%{_sysconfdir}/profile.d/mesa-custom.sh
-#%{_sysconfdir}/ld.so.conf.d/mesa-star-x86_64.conf
+%attr(0644, root, root) %{_sysconfdir}/profile.d/mesa-custom.sh
 %{_libdir}/mesa/*
 
 %files data
 %{_datarootdir}/mesa/data/*
 
 %files examples
-%attr(0755, root, root) %{_datarootdir}/mesa/star-test-suite/*
-%attr(0755, root, root) %{_datarootdir}/mesa/binary-test-suite/*
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/*/inlist*
+%attr(0644, root, root) %{_datarootdir}/mesa/binary-test-suite/*/inlist*
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/*/*.list
+%attr(0644, root, root) %{_datarootdir}/mesa/binary-test-suite/*/*.list
+%{_datarootdir}/mesa/star-test-suite/*/*defaults
+%{_datarootdir}/mesa/binary-test-suite/*/*defaults
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/*/*.mod
+#%attr(0644, root, root) %{_datarootdir}/mesa/binary-test-suite/*/*.mod
+%attr(0644, root, root) %{_datarootdir}/mesa/*-test-suite/*/re
+%attr(0644, root, root) %{_datarootdir}/mesa/*-test-suite/*/*.in
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/*/readme*
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/*/README*
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/*/HOW_TO
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/8.8M_urca/urca.*
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/wd_aic/aic.*
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/wd_o_ne_ignite/wd_o_ne_ignite.net
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/make_low_mass_with_uniform_composition/list
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/create_zahb/zahb_masses.list_big
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/irradiated_planet/irrad_out.txt
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/solar_calibration/ttt.adipls.prt
+%attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/wd_aic/wd_aic.net
 
+
+%attr(0644, root, root) %{_datarootdir}/mesa/binary-test-suite/jdot_gr_check/.restart
+
+
+%attr(0755, root, root) %{_datarootdir}/mesa/star-test-suite/*/rn*
+%attr(0755, root, root) %{_datarootdir}/mesa/binary-test-suite/*/rn*
+%{_datarootdir}/mesa/star-test-suite/make_planets/runscript.py*
 
 %doc
 
