@@ -21,18 +21,37 @@ mkdir ~liveuser/.config
 touch ~liveuser/.config/gnome-initial-setup-done
 
 mkdir -p ~liveuser/Desktop
-ln -sf /usr/bin/firefox ~liveuser/Desktop/firefox
-ln -sf /usr/bin/gnome-terminal ~liveuser/Desktop/gnome-terminal
+cp /usr/share/applications/firefox.desktop ~liveuser/Desktop/firefox.desktop
 
-# make the installer show up
-if [ -f /usr/share/applications/liveinst.desktop ]; then
+sed -i 's/Excec\=firefox/Exec\=firefox\ \%u\ http\:\/\/mesa\.sourceforge\.net/' ~liveuser/Desktop/firefox.desktop
 
-  cat >> /usr/share/glib-2.0/schemas/org.gnome.shell.gschema.override << FOE
+cp /usr/share/applications/org.gnome.Terminal.desktop ~liveuser/Desktop/org.gnome.Terminal.desktop
+
+cat >> /usr/share/glib-2.0/schemas/org.gnome.shell.gschema.override << FOE
 [org.gnome.shell]
 favorite-apps=['firefox.desktop', 'org.gnome.Nautilus.desktop','org.gnome.Terminal.desktop']
+
+[org.gnome.desktop.background]
+show-desktop-icons=true
+
+[org.gnome.shell]
+enabled-extensions=['launch-new-instance@gnome-shell-extensions.gcampax.github.com','window-list@gnome-shell-extensions.gcampax.github.com']
+
+[org.gnome.desktop.wm.preferences]
+button-layout='appmenu:minimize,maximize,close'
+
+[org.gnome.desktop.sound]
+event-sounds=false
+
+[org.gnome.desktop.privacy]
+report-technical-problems=false
+send-software-usage-stats=false
+
+[org.gnome.desktop.datetime]
+automatic-timezone=true
+
 FOE
 
-fi
 
 # rebuild schema cache with any overrides we installed
 glib-compile-schemas /usr/share/glib-2.0/schemas
@@ -52,7 +71,6 @@ fi
 # make sure to set the right permissions and selinux contexts
 chown -R liveuser:liveuser /home/liveuser/
 restorecon -R /home/liveuser/
-
 
 EOF
 

@@ -58,14 +58,15 @@ cd star/work
 rm -rf mk src make clean LOGS photos 2>/dev/null
 
 
-for r in "rn" "re"
+for r in rn re
 do 
    if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
    then 
       echo '#!/bin/bash' | cat - "$r" > tmp && mv tmp "$r"
    fi
-   sed -i s'/star\.exe/\/usr\/bin\/mesa\-star/g' $r
-   sed -i s'/\.\/star/\/usr\/bin\/mesa\-star/g' $r  
+         sed -i 's/\.\/star\.exe/mesa\-star/g' "$r"
+         sed -i 's/star\.exe/mesa\-star/g' "$r"
+         sed -i 's/\.\/star/mesa\-star/g' "$r" 
 done
 
 
@@ -76,16 +77,18 @@ cd binary/work
 ./mk
 rm -rf mk src make clean LOGS photos 2>/dev/null
 
-for r in "rn" "rn*" "re"
+for r in rn re
 do 
    if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
    then 
       echo '#!/bin/bash' | cat - "$r" > tmp && mv tmp "$r"
    fi
-   sed -i s'/binary\.exe/\/usr\/bin\/mesa\-binary/g' $r
-   sed -i s'/\.\/binary/\/usr\/bin\/mesa\-binary/g' $r     
+         sed -i 's/\.\/binary\.exe/mesa-binary/g' "$r"
+         sed -i 's/binary\.exe/mesa-binary/g' "$r"
+         sed -i 's/\.\/binary/mesa-binary/g' "$r"      
 done
 
+cp ../defaults/binary_history_columns.list .
 
 mv binary ../.
 cd $MESA_DIR
@@ -120,13 +123,21 @@ sed -i '/read_extra_star_job_inlist1/d' */inlist*
 sed -i '/extra_star_job_inlist1_name/d' */inlist*
 
 #Add inlists from star/ into the test suites, only if they need. Also remove all the ../../ from their paths
+
+#Remove unwanted test suites
+rm -rf make_massive_for_o_burn 2>/dev/null
+
 for file in "inlist_ccsn_edep_defaults" "inlist_ccsn_explosion_defaults" "inlist_ccsn_RTI_defaults" "inlist_massive_defaults" 
 do 
    for dir in */
    do 
-      for i in "$dir/inlist*"
+      for i in $dir/inlist*
       do
-         grep -q "$file" "$dir/inlist*" && sed -i "s/\.\.\/\.\.\/$file/$file/g" "$i" && cp "$MESA_DIR/star/$file" "$dir/$file"
+         grep -q $file $dir/inlist* && sed -i "s/\.\.\/\.\.\/$file/$file/g" $i && cp $MESA_DIR/star/$file $dir/$file
+      
+#As we remove extra data files, remove any references to them in the inlists
+         sed -i '/_prefix/d' $i 2>/dev/null
+         sed -i '/_suffix/d' $i 2>/dev/null
       done
    done
 done
@@ -134,24 +145,25 @@ done
 #Fix she-bangs on rn scripts
 for dir in */
 do 
-   for r in "$dir/rn*" "$dir/re"
+   for r in $dir/rn $dir/rn* $dir/re
    do 
-      if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
-      then 
-         echo '#!/bin/bash' | cat - "$r" > tmp && mv tmp "$r"
+      if [[ -e "$r" ]] 
+      then
+         if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
+         then 
+            echo '#!/bin/bash' | cat - "$r" > tmp && mv tmp "$r"
+         fi
+         sed -i 's/\.\/star\.exe/mesa\-star/g' "$r"
+         sed -i 's/star\.exe/mesa\-star/g' "$r"
+         sed -i 's/\.\/star/mesa\-star/g' "$r"  
       fi
-      sed -i s'/star\.exe/\/usr\/bin\/mesa\-star/g' $r
-      sed -i s'/\.\/star/\/usr\/bin\/mesa\-star/g' $r  
    done
-done
-
 #enable pgstar plots for all
-for dir in */
-do
    if [[ -e  $dir/inlist ]]
    then
       sed -i 's/\!pgstar_flag/pgstar_flag/g' $dir/inlist* 2>/dev/null
    fi
+   
 done
 
 
@@ -175,19 +187,26 @@ do
    then
       sed -i 's/\!pgstar_flag/pgstar_flag/g' $dir/inlist* 2>/dev/null
    fi
-done
+#As we remove extra data files, remove any references to them in the inlists
+   sed -i '/_prefix/d' $dir/inlist* 2>/dev/null
+   sed -i '/_suffix/d' $dir/inlist* 2>/dev/null
 
+#Copy in binary_history
+   cp ../defaults/binary_history_columns.list $dir/.
+   
 #Fix she-bangs on rn scripts
-for dir in */
-do 
-   for r in "$dir/rn*" "$dir/re"
-   do 
-      if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
-      then 
-         echo '#!/bin/bash' | cat - "$r" > tmp && mv tmp "$r"
+   for r in $dir/rn $dir/rn* $dir/re
+      do 
+      if [[ -e "$r" ]] 
+      then
+         if [[ $(head -n 1 $r) != '#!/bin/bash' ]]
+         then 
+            echo '#!/bin/bash' | cat - "$r" > tmp && mv tmp "$r"
+         fi
+         sed -i 's/\.\/binary\.exe/mesa-binary/g' "$r"
+         sed -i 's/binary\.exe/mesa-binary/g' "$r"
+         sed -i 's/\.\/binary/mesa-binary/g' "$r"     
       fi
-      sed -i s'/binary\.exe/\/usr\/bin\/mesa-binary/g' $r
-      sed -i s'/\.\/binary/\/usr\/bin\/mesa-binary/g' $r     
    done
 done
 
@@ -200,10 +219,11 @@ mkdir -p %{buildroot}%{_bindir}
 mkdir -p %{buildroot}%{_datarootdir}/mesa
 mkdir -p %{buildroot}%{_sysconfdir}/profile.d
 mkdir -p %{buildroot}%{_libdir}/mesa
+mkdir -p %{buildroot}%{_libexecdir}/mesa
 
 #Compiled exectuables
-cp -v star/star %{buildroot}%{_bindir}/mesa-star
-cp -v binary/binary %{buildroot}%{_bindir}/mesa-binary
+cp -v star/star %{buildroot}%{_libexecdir}/mesa/star
+cp -v binary/binary %{buildroot}%{_libexecdir}/mesa/binary
 
 #Data directory without cache files in
 cp -vr data %{buildroot}%{_datarootdir}/mesa/
@@ -276,8 +296,8 @@ ln -sf pgplot/libpgplot.so libpgplot.so
 cd -
 
 #Remove rpaths
-chrpath --delete %{buildroot}%{_bindir}/mesa-star
-chrpath --delete %{buildroot}%{_bindir}/mesa-binary
+chrpath --delete %{buildroot}%{_libexecdir}/mesa/star
+chrpath --delete %{buildroot}%{_libexecdir}/mesa/binary
 
 
 %post -p /sbin/ldconfig
@@ -286,8 +306,14 @@ chrpath --delete %{buildroot}%{_bindir}/mesa-binary
 
 %files 
 %attr(0755, root, root) %{_bindir}/mesa-*
-%{_datarootdir}/mesa/star-work
-%{_datarootdir}/mesa/binary-work
+%attr(0755, root, root) %{_libexecdir}/mesa/*
+%{_datarootdir}/mesa/*-work/inlist*
+%{_datarootdir}/mesa/*-work/*.list
+%{_datarootdir}/mesa/*-work/*-defaults
+%{_datarootdir}/mesa/*-work/README
+%attr(0755, root, root) %{_datarootdir}/mesa/*-work/rn*
+%attr(0755, root, root) %{_datarootdir}/mesa/*-work/re
+
 %{_datarootdir}/mesa/star-defaults
 %{_datarootdir}/mesa/binary-defaults
 %attr(0644, root, root) %{_sysconfdir}/profile.d/mesa-custom.sh
@@ -304,8 +330,6 @@ chrpath --delete %{buildroot}%{_bindir}/mesa-binary
 %{_datarootdir}/mesa/star-test-suite/*/*defaults
 %{_datarootdir}/mesa/binary-test-suite/*/*defaults
 %attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/*/*.mod
-#%attr(0644, root, root) %{_datarootdir}/mesa/binary-test-suite/*/*.mod
-%attr(0644, root, root) %{_datarootdir}/mesa/*-test-suite/*/re
 %attr(0644, root, root) %{_datarootdir}/mesa/*-test-suite/*/*.in
 %attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/*/readme*
 %attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/*/README*
@@ -323,9 +347,9 @@ chrpath --delete %{buildroot}%{_bindir}/mesa-binary
 %attr(0644, root, root) %{_datarootdir}/mesa/binary-test-suite/jdot_gr_check/.restart
 
 
-%attr(0755, root, root) %{_datarootdir}/mesa/star-test-suite/*/rn*
-%attr(0755, root, root) %{_datarootdir}/mesa/binary-test-suite/*/rn*
-%{_datarootdir}/mesa/star-test-suite/make_planets/runscript.py*
+%attr(0755, root, root) %{_datarootdir}/mesa/*-test-suite/*/rn*
+%attr(0755, root, root) %{_datarootdir}/mesa/*-test-suite/*/re
+%attr(0755, root, root) %{_datarootdir}/mesa/star-test-suite/make_planets/runscript.py*
 
 %doc
 

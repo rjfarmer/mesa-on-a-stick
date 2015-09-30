@@ -36,15 +36,7 @@
 
 
 # Explicitly specified here:
-# <notting> walters: because otherwise dependency loops cause yum issues.
 kernel
-
-# This was added a while ago, I think it falls into the category of
-# "Diagnosis/recovery tool useful from a Live OS image".  Leaving this untouched
-# for now.
-memtest86+
-
-# Need aajohan-comfortaa-fonts for the SVG rnotes images
 aajohan-comfortaa-fonts
 
 
@@ -53,7 +45,7 @@ aajohan-comfortaa-fonts
 @core
 @hardware-support
 @networkmanager-submodules
-
+@printing
 
 #workstation-product
 ModemManager
@@ -72,15 +64,12 @@ avahi
 baobab
 bash-completion
 bc
-bijiben
 bind-utils
 bridge-utils
-btrfs-progs
 bzip2
 caribou
 caribou-gtk2-module
 caribou-gtk3-module
-cheese
 chrony
 cifs-utils
 control-center
@@ -95,7 +84,6 @@ dnf
 dnf-plugins-core
 dos2unix
 dosfstools
-empathy
 eog
 ethtool
 evince
@@ -113,33 +101,26 @@ gedit
 glib-networking
 gnome-backgrounds
 gnome-bluetooth
-gnome-boxes
 gnome-calculator
 gnome-classic-session
 gnome-clocks
 gnome-color-manager
-gnome-contacts
-gnome-disk-utility
 gnome-documents
-gnome-font-viewer
-gnome-getting-started-docs
-gnome-initial-setup
-gnome-maps
 gnome-screenshot
 gnome-session-wayland-session
 gnome-session-xsession
 gnome-settings-daemon
 gnome-shell
 gnome-shell-extension-background-logo
+gnome-shell-extension-launch-new-instance
+gnome-shell-extension-window-list
 gnome-software
 gnome-system-monitor
 gnome-terminal
 gnome-themes-standard
 gnome-user-docs
 gnome-user-share
-gnome-weather
 gnupg2
-google-android-emoji-fonts
 gucharmap
 gvfs-afc
 gvfs-afp
@@ -197,23 +178,21 @@ plymouth
 polkit-js-engine
 ppp
 psacct
-qt
-qt-settings
-qt-x11
-qt5-qtbase
-qt5-qtbase-gui
-qt5-qtdeclarative
-qt5-qtxmlpatterns
-quota
+# qt
+# qt1
+# qt5-qtbase
+# qt5-qtb-settings
+# qt-x1ase-gui
+# qt5-qtdeclarative
+# qt5-qtxmlpatterns
+# quota
 rdist
 realmd
 rng-tools
 rp-pppoe
 rsync
-rygel
 scl-utils
 seahorse
-setuptool
 shotwell
 sos
 sssd
@@ -223,18 +202,14 @@ sushi
 symlinks
 tar
 tcp_wrappers
-tcpdump
 telnet
 time
 totem
 totem-nautilus
-traceroute
 tree
-unoconv
 unzip
 usbutils
 vconfig
-vinagre
 wget
 which
 wireless-tools
@@ -242,7 +217,6 @@ words
 wvdial
 xdg-user-dirs-gtk
 xorg-x11-drv-libinput
-yelp
 zip
 
 #Remove trademarked packages and replace with generic versions
@@ -252,7 +226,8 @@ zip
 -fedora-release-notes
 
 generic-logos
-generic-release
+generic-release-workstation
+-generic-release-cloud
 generic-release-notes
 
 
