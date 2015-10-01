@@ -300,12 +300,23 @@ chrpath --delete %{buildroot}%{_libexecdir}/mesa/star
 chrpath --delete %{buildroot}%{_libexecdir}/mesa/binary
 
 
+#########SDK
+cp ../mesasdk/bin/ff* %{buildroot}%{_bindir}/.
+cp ../mesasdk/bin/h5* %{buildroot}%{_bindir}/.
+cp ../mesasdk/bin/images_to_movies.sh %{buildroot}%{_bindir}/.
+cp ../mesasdk/bin/x264 %{buildroot}%{_bindir}/.
+
+
+
+
+
+
 %post -p /sbin/ldconfig
 %postun -p /sbin/ldconfig
 
 
 %files 
-%attr(0755, root, root) %{_bindir}/mesa-*
+%attr(0755, root, root) %{_bindir}/*
 %attr(0755, root, root) %{_libexecdir}/mesa/*
 %{_datarootdir}/mesa/*-work/inlist*
 %{_datarootdir}/mesa/*-work/*.list
@@ -356,5 +367,5 @@ chrpath --delete %{buildroot}%{_libexecdir}/mesa/binary
 
 
 %changelog
-* Mon Sep 14 2015 Robert Farmer
+* Mon Sep 14 2015 Robert Farmer 1.0.0
 - Setup
