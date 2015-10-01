@@ -285,6 +285,9 @@ cp ../extras/mesa-custom.sh %{buildroot}%{_sysconfdir}/profile.d/mesa-custom.sh
 cp ../extras/mesa-star* %{buildroot}%{_bindir}/.
 cp ../extras/mesa-binary* %{buildroot}%{_bindir}/.
 
+#Customized images_to_movie.sh
+cp ../extras/images_to_movie.sh %{buildroot}%{_bindir}/.
+
 #Adds needed libraries from the sdk
 cp -rv ../mesasdk/lib64/*.so* %{buildroot}%{_libdir}/mesa/
 cp -rv ../mesasdk/lib/*.so* %{buildroot}%{_libdir}/mesa/
@@ -303,7 +306,6 @@ chrpath --delete %{buildroot}%{_libexecdir}/mesa/binary
 #########SDK
 cp ../mesasdk/bin/ff* %{buildroot}%{_bindir}/.
 cp ../mesasdk/bin/h5* %{buildroot}%{_bindir}/.
-cp ../mesasdk/bin/images_to_movies.sh %{buildroot}%{_bindir}/.
 cp ../mesasdk/bin/x264 %{buildroot}%{_bindir}/.
 
 
@@ -367,5 +369,5 @@ cp ../mesasdk/bin/x264 %{buildroot}%{_bindir}/.
 
 
 %changelog
-* Mon Sep 14 2015 Robert Farmer 1.0.0
+* Mon Sep 14 2015 Robert Farmer <rjfarmer@asu.edu> - 1.0.0
 - Setup
