@@ -48,6 +48,7 @@ aajohan-comfortaa-fonts
 @printing
 
 #workstation-product
+abattis-cantarell-fonts
 ModemManager
 NetworkManager-adsl
 NetworkManager-openconnect
@@ -114,6 +115,7 @@ gnome-shell
 gnome-shell-extension-background-logo
 gnome-shell-extension-launch-new-instance
 gnome-shell-extension-window-list
+gnome-shell-extension-apps-menu
 gnome-software
 gnome-system-monitor
 gnome-terminal
@@ -204,8 +206,8 @@ tar
 tcp_wrappers
 telnet
 time
-totem
-totem-nautilus
+#totem
+#totem-nautilus
 tree
 unzip
 usbutils
@@ -235,7 +237,6 @@ generic-release-notes
 mesa-data
 mesa-examples
 mesa-7624
-
 
 #Other packages
 python3-ipython

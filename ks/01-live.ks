@@ -26,6 +26,7 @@ cp /usr/share/applications/firefox.desktop ~liveuser/Desktop/firefox.desktop
 sed -i 's/Excec\=firefox/Exec\=firefox\ \%u\ http\:\/\/mesa\.sourceforge\.net/' ~liveuser/Desktop/firefox.desktop
 
 cp /usr/share/applications/org.gnome.Terminal.desktop ~liveuser/Desktop/org.gnome.Terminal.desktop
+cp /usr/share/mesa/INSTRUCTIONS.txt ~liveuser/Desktop/INSTRUCTIONS.txt
 
 cat >> /usr/share/glib-2.0/schemas/org.gnome.shell.gschema.override << FOE
 [org.gnome.shell]
@@ -35,7 +36,7 @@ favorite-apps=['firefox.desktop', 'org.gnome.Nautilus.desktop','org.gnome.Termin
 show-desktop-icons=true
 
 [org.gnome.shell]
-enabled-extensions=['launch-new-instance@gnome-shell-extensions.gcampax.github.com','window-list@gnome-shell-extensions.gcampax.github.com']
+enabled-extensions=['launch-new-instance@gnome-shell-extensions.gcampax.github.com','window-list@gnome-shell-extensions.gcampax.github.com','apps-menu@gnome-shell-extensions.gcampax.github.com']
 
 [org.gnome.desktop.wm.preferences]
 button-layout='appmenu:minimize,maximize,close'
@@ -73,5 +74,6 @@ chown -R liveuser:liveuser /home/liveuser/
 restorecon -R /home/liveuser/
 
 EOF
+
 
 %end

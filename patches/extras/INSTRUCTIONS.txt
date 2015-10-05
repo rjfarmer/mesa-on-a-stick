@@ -1,16 +1,4 @@
-# mesa-on-a-stick
-
-This is a fedora remix, with packages from fedora 22 https://getfedora.org/ and is in no way
-affliated with the fedora project. 
-
-It contains a pre-installed version of MESA http://mesa.sourceforge.net/
-
-## Where to get it
-
-## Installation instructions
-
-
-## Instructions
+INSTRUCTIONS
 
 Things are a little different to a normal MESA run. There is no need
 to ever call ./mk or ./clean (in fact you cant i deleted the
@@ -55,3 +43,8 @@ No gyre or adipls support
 The data files (eos,kap etc) are limited to the default set, so they
 can not be changed.
 No support for making movies
+
+If people want a customized version (run_stars_extra, 
+work directories allready setup, different homepage etc) of this, 
+then drop me an email or open a bug report and i can see what i can do.
+

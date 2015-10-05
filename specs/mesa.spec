@@ -134,10 +134,6 @@ do
       for i in $dir/inlist*
       do
          grep -q $file $dir/inlist* && sed -i "s/\.\.\/\.\.\/$file/$file/g" $i && cp $MESA_DIR/star/$file $dir/$file
-      
-#As we remove extra data files, remove any references to them in the inlists
-         sed -i '/_prefix/d' $i 2>/dev/null
-         sed -i '/_suffix/d' $i 2>/dev/null
       done
    done
 done
@@ -163,6 +159,9 @@ do
    then
       sed -i 's/\!pgstar_flag/pgstar_flag/g' $dir/inlist* 2>/dev/null
    fi
+#As we remove extra data files, remove any references to them in the inlists
+   sed -i '/\_prefix/d' $dir/inlist* 2>/dev/null
+   sed -i '/\_suffix/d' $dir/inlist* 2>/dev/null
    
 done
 
@@ -284,9 +283,10 @@ cp ../extras/mesa-custom.sh %{buildroot}%{_sysconfdir}/profile.d/mesa-custom.sh
 #extra shell scripts used
 cp ../extras/mesa-star* %{buildroot}%{_bindir}/.
 cp ../extras/mesa-binary* %{buildroot}%{_bindir}/.
+cp ../extras/INSTRUCTIONS.txt %{buildroot}%{_datarootdir}/mesa/.
 
 #Customized images_to_movie.sh
-cp ../extras/images_to_movie.sh %{buildroot}%{_bindir}/.
+#cp ../extras/images_to_movie.sh %{buildroot}%{_bindir}/.
 
 #Adds needed libraries from the sdk
 cp -rv ../mesasdk/lib64/*.so* %{buildroot}%{_libdir}/mesa/
@@ -304,9 +304,9 @@ chrpath --delete %{buildroot}%{_libexecdir}/mesa/binary
 
 
 #########SDK
-cp ../mesasdk/bin/ff* %{buildroot}%{_bindir}/.
+#cp ../mesasdk/bin/ff* %{buildroot}%{_bindir}/.
 cp ../mesasdk/bin/h5* %{buildroot}%{_bindir}/.
-cp ../mesasdk/bin/x264 %{buildroot}%{_bindir}/.
+#cp ../mesasdk/bin/x264 %{buildroot}%{_bindir}/.
 
 
 
@@ -324,6 +324,7 @@ cp ../mesasdk/bin/x264 %{buildroot}%{_bindir}/.
 %{_datarootdir}/mesa/*-work/*.list
 %{_datarootdir}/mesa/*-work/*-defaults
 %{_datarootdir}/mesa/*-work/README
+%{_datarootdir}/mesa/INSTRUCTIONS.txt
 %attr(0755, root, root) %{_datarootdir}/mesa/*-work/rn*
 %attr(0755, root, root) %{_datarootdir}/mesa/*-work/re
 
@@ -340,8 +341,9 @@ cp ../mesasdk/bin/x264 %{buildroot}%{_bindir}/.
 %attr(0644, root, root) %{_datarootdir}/mesa/binary-test-suite/*/inlist*
 %attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/*/*.list
 %attr(0644, root, root) %{_datarootdir}/mesa/binary-test-suite/*/*.list
-%{_datarootdir}/mesa/star-test-suite/*/*defaults
-%{_datarootdir}/mesa/binary-test-suite/*/*defaults
+%{_datarootdir}/mesa/star-test-suite/*/star-defaults
+%{_datarootdir}/mesa/binary-test-suite/*/star-defaults
+%{_datarootdir}/mesa/binary-test-suite/*/binary-defaults
 %attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/*/*.mod
 %attr(0644, root, root) %{_datarootdir}/mesa/*-test-suite/*/*.in
 %attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/*/readme*
