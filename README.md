@@ -8,9 +8,11 @@ It contains a pre-installed version of MESA http://mesa.sourceforge.net/
 ## Where to get it
 
 The image comes as a 1.3G .iso file available here:
+
 https://www.dropbox.com/s/cxsdww393w20p0q/MESA.iso?dl=0
 
 sha256 6e3610eed9dd86ac8acbd0a31b1d4b0dd07079e118047e08b8d9b4ba166356fe
+
 md5 cfb6920b5988e71cf86848a27395dee8
 
 ## Installation instructions
