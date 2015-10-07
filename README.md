@@ -3,7 +3,11 @@
 This is a fedora remix, with packages from fedora 22 https://getfedora.org/ and is in no way
 affliated with the fedora project. 
 
-It contains a pre-installed version of MESA http://mesa.sourceforge.net/
+It contains a pre-installed version of MESA,
+
+http://mesa.sourceforge.net/
+
+This based on MESA r6794 with SDK 20150908.
 
 ## Where to get it
 
@@ -29,9 +33,9 @@ stick.
 
 Things are a little different to a normal MESA run. There is no need
 to ever call ./mk or ./clean (in fact you can't, I deleted the
-maakefiles). MESA has already been pre-compiled and exists as an
+makefiles). MESA has already been pre-compiled and exists as an
 executable installed in a system wide location. This means there is
-*NO* support for custom run_stars_extras, if you want to customize
+NO support for custom run_stars_extras, if you want to customize
 your run_stars_extra file then you will need to use the normal 
 installation methods.
 
@@ -53,9 +57,9 @@ you can tap TAB TAB to get a list of possible folders). The
 difference between the commands is the mesa-star-cwd creates a copy
 of the default work directory, which is a basic shell of what you
 need to run a model. While mesa-star-test copies a MESA test suite
-folder,  hich is a useful place to start new projects. You should
+folder, which is a useful place to start new projects. You should
 not need to make any changes in the test_suite inlists for it to 
-work, other than your own  customization's.
+work, other than your own customization's.
 
 Then edit the inlists to describe the model you want and then type:
 
@@ -65,14 +69,16 @@ to start the MESA run. PGSTAR is enabled by default for all runs,
 though you may want to customize the pgstar inlist.
 There is also ./re photo_name to restart from a photo. 
 
-In the folder is a sub-folder star-defaults (and binaries have both 
-star_defaults and binary-ddefaults) which show the default inlists 
-values for parameters you do not set yourself. Editing these files 
+In each folder is a sub-folder star-defaults (and binaries have both 
+star_defaults and binary-defaults) which show the default inlist 
+values, for parameters you do not set yourself. Editing these files 
 will have no effect on the MESA run.
 
 Binary stars can be handled the same way as single stars except replace
 
-mesa-star-cwd with mesa-binary-cwd and
+mesa-star-cwd with mesa-binary-cwd 
+
+and
 
 mesa-star-test with mesa-binary-test
 
