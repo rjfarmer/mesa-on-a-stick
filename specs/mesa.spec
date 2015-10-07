@@ -260,7 +260,7 @@ cd %{buildroot}%{_datarootdir}/mesa/star-test-suite
 for i in */
 do
    cd $i
-   ln -sf %{_datarootdir}/mesa/star-defaults star-defaults
+   cp -r %{buildroot}%{_datarootdir}/mesa/star-defaults star-defaults
    cd ../
 done
 
@@ -270,8 +270,8 @@ cd %{buildroot}%{_datarootdir}/mesa/binary-test-suite
 for i in */
 do
    cd $i
-   ln -sf %{_datarootdir}/mesa/star-defaults star-defaults
-   ln -sf %{_datarootdir}/mesa/binary-defaults binary-defaults
+   cp -r %{buildroot}%{_datarootdir}/mesa/star-defaults star-defaults
+   cp -r %{buildroot}%{_datarootdir}/mesa/binary-defaults binary-defaults
    cd ../
 done
 
@@ -283,7 +283,7 @@ cp ../extras/mesa-custom.sh %{buildroot}%{_sysconfdir}/profile.d/mesa-custom.sh
 #extra shell scripts used
 cp ../extras/mesa-star* %{buildroot}%{_bindir}/.
 cp ../extras/mesa-binary* %{buildroot}%{_bindir}/.
-cp ../extras/INSTRUCTIONS.txt %{buildroot}%{_datarootdir}/mesa/.
+cp ../extras/INSTRUCTIONS.txt %{buildroot}%{_datarootdir}/mesa/INSTRUCTIONS.txt
 
 #Customized images_to_movie.sh
 #cp ../extras/images_to_movie.sh %{buildroot}%{_bindir}/.
@@ -302,6 +302,7 @@ cd -
 chrpath --delete %{buildroot}%{_libexecdir}/mesa/star
 chrpath --delete %{buildroot}%{_libexecdir}/mesa/binary
 
+rm %{buildroot}%{_datarootdir}/mesa/binary-test-suite/jdot_gr_check/.restart
 
 #########SDK
 #cp ../mesasdk/bin/ff* %{buildroot}%{_bindir}/.
@@ -357,9 +358,6 @@ cp ../mesasdk/bin/h5* %{buildroot}%{_bindir}/.
 %attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/irradiated_planet/irrad_out.txt
 %attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/solar_calibration/ttt.adipls.prt
 %attr(0644, root, root) %{_datarootdir}/mesa/star-test-suite/wd_aic/wd_aic.net
-
-
-%attr(0644, root, root) %{_datarootdir}/mesa/binary-test-suite/jdot_gr_check/.restart
 
 
 %attr(0755, root, root) %{_datarootdir}/mesa/*-test-suite/*/rn*
