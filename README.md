@@ -25,11 +25,13 @@ Follow the guide here:
 https://fedoraproject.org/wiki/How_to_create_and_use_Live_USB
 replacing "Fedora image" with the MESA.iso
 
+Mac users ignore the request for adding BS=1M to the dd line.
+
 Or alternatively you could install a virtual machine software
 (like qemu, virtualbox etc) and run the iso directly without burning it to a USB
 stick.
 
-## Instructions
+## Runtime Instructions
 
 Things are a little different to a normal MESA run. There is no need
 to ever call ./mk or ./clean (in fact you can't, I deleted the
@@ -59,7 +61,7 @@ of the default work directory, which is a basic shell of what you
 need to run a model. While mesa-star-test copies a MESA test suite
 folder, which is a useful place to start new projects. You should
 not need to make any changes in the test_suite inlists for it to 
-work, other than your own customization's.
+work, other than your own customizations.
 
 Then edit the inlists to describe the model you want and then type:
 
@@ -94,5 +96,5 @@ can not be changed.
 
 No support for making movies
 
-No run_stars_extras
+No run_stars_extra
 
