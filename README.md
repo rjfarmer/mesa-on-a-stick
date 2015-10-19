@@ -7,7 +7,7 @@ It contains a pre-installed version of MESA,
 
 http://mesa.sourceforge.net/
 
-This based on MESA r6794 with SDK 20150908.
+This based on MESA r7624 with SDK 20150908.
 
 ## Where to get it
 
