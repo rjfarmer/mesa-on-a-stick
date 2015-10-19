@@ -26,7 +26,7 @@ https://fedoraproject.org/wiki/How_to_create_and_use_Live_USB
 replacing "Fedora image" with the MESA.iso
 
 Or alternatively you could install a virtual machine software
-(like qemu) and run the iso directly without burning it to a USB
+(like qemu, virtualbox etc) and run the iso directly without burning it to a USB
 stick.
 
 ## Instructions
@@ -67,12 +67,16 @@ Then edit the inlists to describe the model you want and then type:
 
 to start the MESA run. PGSTAR is enabled by default for all runs, 
 though you may want to customize the pgstar inlist.
-There is also ./re photo_name to restart from a photo. 
+There is also, 
+
+./re photo_name 
+
+to restart from a photo. 
 
 In each folder is a sub-folder star-defaults (and binaries have both 
-star_defaults and binary-defaults) which show the default inlist 
+star-defaults and binary-defaults) which show the default inlist 
 values, for parameters you do not set yourself. Editing these files 
-will have no effect on the MESA run.
+has no effect on the MESA run.
 
 Binary stars can be handled the same way as single stars except replace
 
@@ -89,3 +93,6 @@ The data files (eos,kap etc) are limited to the default set, so they
 can not be changed.
 
 No support for making movies
+
+No run_stars_extras
+
