@@ -21,11 +21,80 @@ md5 cfb6920b5988e71cf86848a27395dee8
 
 ## Installation instructions
 
-Follow the guide here:
+Either follow the guide here:
 https://fedoraproject.org/wiki/How_to_create_and_use_Live_USB
-replacing "Fedora image" with the MESA.iso
+replacing "Fedora image" with the MESA.iso or read on:
 
-Mac users ignore the request for adding BS=1M to the dd line.
+### Windows
+To be written
+
+
+### Linux
+1) Insert USB stick
+
+2) Type
+````bash
+dmesg | tail 
+````
+and look at the end for a message similiar to
+````bash
+[32656.573467] sd 8:0:0:0: [sdX] Attached SCSI removable disk
+````
+Where sdX is sdb,sdc etc. Keep a note of this and where i type sdX insert your sd name
+
+4) Reformat the stick to ext3 (Usually possible by right clicking the icon for the USB drive and selecting format)
+
+3) Type
+````bash
+     sudo dd if=/path/to/MESA.iso of=/dev/sdX  bs=1M
+````
+Make sure to get the right sdX !
+
+4) Reboot machine
+
+5) You'll need to change the boot order usally, this means during boot press F12 or esc and select the USB device.
+
+
+### Mac users
+1) insert usb stick
+
+2) open disk utility. erase the usb stick, choosing the “OS X Extended (Journaled)" format.
+
+3) convert the .iso to a .img
+
+````bash
+   hdiutil convert -format UDRW -o /path/to/MESA.img /path/to/MESA.iso
+````
+
+   change the resulting “MESA.img.dmg” ending to “MESA.img”
+
+4) % diskutil list
+   find the device node of the usb stick, e.g., /dev/disk1
+
+5) % diskutil unmountDisk /dev/diskN
+
+6) this is the dangerous command, make sure you have the diskN correct or you can really mess up your machine
+````bash
+  sudo dd if=/path/to/MESA.img of=/dev/rdiskN bs=1m
+````
+   if you see the error dd: Invalid number '1m', you are using gnu dd.
+   use the same command but replace bs=1m with bs=1M
+
+7) wait about 10 min for dd to finish
+
+8) Type
+````bash
+diskutil eject /dev/diskN
+````
+
+9) restart your mac, or take the usb stick to any other mac and restart,
+    while holding down the option key to bring up the "Startup Manager".
+
+10) choose the “windows” device to boot from
+
+11) mesa-on-stick should appear.
+
+### Alternatively
 
 Or alternatively you could install a virtual machine software
 (like qemu, virtualbox etc) and run the iso directly without burning it to a USB
