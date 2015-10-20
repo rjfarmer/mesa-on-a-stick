@@ -68,12 +68,17 @@ Make sure to get the right sdX !
 
    change the resulting “MESA.img.dmg” ending to “MESA.img”
 
-4) % diskutil list
-   find the device node of the usb stick, e.g., /dev/disk1
+4)  To find the device node of the usb stick, e.g., /dev/disk1
+````bash
+diskutil list
+````
 
-5) % diskutil unmountDisk /dev/diskN
+5) Unmount the usb drive
+````bash
+diskutil unmountDisk /dev/diskN
+````
 
-6) this is the dangerous command, make sure you have the diskN correct or you can really mess up your machine
+6) This is the dangerous command, make sure you have the diskN correct or you can really mess up your machine
 ````bash
   sudo dd if=/path/to/MESA.img of=/dev/rdiskN bs=1m
 ````
@@ -96,9 +101,15 @@ diskutil eject /dev/diskN
 
 ### Alternatively
 
-Or alternatively you could install a virtual machine software
-(like qemu, virtualbox etc) and run the iso directly without burning it to a USB
+Or alternatively you could install a virtual machine software and run the iso directly without burning it to a USB
 stick.
+
+Possible options:
+
+qemu (Linux) http://wiki.qemu.org/Main_Page
+
+virtualbox (Windows,Mac,Linux) https://www.virtualbox.org/wiki/Downloads
+
 
 ## Runtime Instructions
 
@@ -166,4 +177,27 @@ can not be changed.
 No support for making movies
 
 No run_stars_extra
+
+## Additional items
+Nothing you do will be saved to the usb stick, so if you want to keep the results either plug in another usb stick or email them to yourself
+
+When running you will have full sudo rights if you need to configure things
+
+To install additional programs 
+````bash
+sudo dnf search program
+````
+to search for it, and:
+````bash
+sudo dnf install program_name
+````
+to install. Python programs general ship as python-package\_name or python3-package\_name
+
+Ipython3, numpy,scipy and matplotlib are allready installed
+
+
+
+
+
+
 
