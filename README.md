@@ -13,11 +13,11 @@ This based on MESA r7624 with SDK 20150908.
 
 The image comes as a 1.3G .iso file available here:
 
-https://www.dropbox.com/s/cxsdww393w20p0q/MESA.iso?dl=0
+https://www.dropbox.com/s/7wfg1jg0y0u7r2j/MESA-7624.1.iso?dl=0
 
-sha256 6e3610eed9dd86ac8acbd0a31b1d4b0dd07079e118047e08b8d9b4ba166356fe
+sha256 515096642f1ac356de13d73971817877ed175f70b95651c0cb64b5593558ab6d
 
-md5 cfb6920b5988e71cf86848a27395dee8
+md5 bc1c8b354ca7cd16259ec27e59fd2bda
 
 ## Installation instructions
 
@@ -195,7 +195,13 @@ to install. Python programs general ship as python-package\_name or python3-pack
 
 Ipython3, numpy,scipy and matplotlib are allready installed
 
+## Old versions
 
+https://www.dropbox.com/s/cxsdww393w20p0q/MESA.iso?dl=0
+
+sha256 6e3610eed9dd86ac8acbd0a31b1d4b0dd07079e118047e08b8d9b4ba166356fe
+
+md5 cfb6920b5988e71cf86848a27395dee8
 
 
 

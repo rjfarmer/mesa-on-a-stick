@@ -163,6 +163,9 @@ do
    sed -i '/\_prefix/d' $dir/inlist* 2>/dev/null
    sed -i '/\_suffix/d' $dir/inlist* 2>/dev/null
    
+#Replace paths for inlists that load a mod file from data/star_data
+   sed -i "s/\.\.\/\.\.\/\.\.\/data\/star_data/\/usr\/share\/mesa\/data\/star_data/g" $dir/inlist*
+   
 done
 
 
@@ -369,5 +372,8 @@ cp ../mesasdk/bin/h5* %{buildroot}%{_bindir}/.
 
 
 %changelog
+* Fri Oct 30 2015 Robert Farmer <rjfarmer@asu.edu> - 1.0.1
+- Fix mod file paths in data/star_data
+
 * Mon Sep 14 2015 Robert Farmer <rjfarmer@asu.edu> - 1.0.0
 - Setup
